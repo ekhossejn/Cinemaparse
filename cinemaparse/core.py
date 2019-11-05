@@ -9,19 +9,23 @@ class CinemaParser:
         """Присваивание города."""
         self.town = town
         self.content = []
+        
     def extract_raw_content(self):
         """Доставание содержимого страницы."""
         page = requests.get('https://{}.subscity.ru/'.format(self.town))
         self.content = page.text
+        
     def print_raw_content(self):
         """Возвращение содержимого страницы"""
         print(self.content)
+        
     def get_films_list(self):
         """Возвращение списка фильмов"""
         soup = BeautifulSoup(self.content, 'html.parser')
         arr = soup.find_all(class_="movie-plate")
         for elem in arr:
             print(elem.get("attr-title"))
+            
     def get_film_nearest_session(self, film):
         """Возвращение кинотеатра и ближайшего сеанса фильма"""
         page = requests.get('https://{}.subscity.ru/'.format(self.town))
