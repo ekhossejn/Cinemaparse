@@ -51,3 +51,4 @@ class CinemaParser:
                 if earliest.strftime('%x') != now or len(time_cinema) == 0:
                     return None, None
                 return time_cinema[0][1], earliest.strftime('%H:%M')
+        return None
