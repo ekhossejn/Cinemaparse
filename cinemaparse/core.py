@@ -55,11 +55,11 @@ class CinemaParser:
         return None, None
 
     def get_soonest_session(self):
-        """Возвращение ближайший сеанс"""
+        """Возвращение ближайшего сеанса, кинотеатра и названия фильма"""
         film_time = dict()
         for film in self.films:
             name, times = self.get_film_nearest_session(film)
-            if time is not None:
+            if times is not None:
                 film_time[times] = (film, name)
         film_time = sorted(film_time.items(), key=lambda key: key[0])
         if not film_time:
