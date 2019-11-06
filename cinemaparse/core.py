@@ -9,23 +9,24 @@ class CinemaParser:
         """Присваивание города."""
         self.town = town
         self.content = []
-        
+        self.films = []
+
     def extract_raw_content(self):
         """Доставание содержимого страницы."""
         page = requests.get('https://{}.subscity.ru/'.format(self.town))
         self.content = page.text
-        
+
     def print_raw_content(self):
         """Возвращение содержимого страницы"""
         print(self.content)
-        
+
     def get_films_list(self):
         """Возвращение списка фильмов"""
         soup = BeautifulSoup(self.content, 'html.parser')
         arr = soup.find_all(class_="movie-plate")
-        for elem in arr:
-            print(elem.get("attr-title"))
-            
+        self.films = [elem.get("attr-title") for elem in arr]
+        print(self.films)
+
     def get_film_nearest_session(self, film):
         """Возвращение кинотеатра и ближайшего сеанса фильма"""
         page = requests.get('https://{}.subscity.ru/'.format(self.town))
@@ -51,4 +52,16 @@ class CinemaParser:
                 if earliest.strftime('%x') != now or len(time_cinema) == 0:
                     return None, None
                 return time_cinema[0][1], earliest.strftime('%H:%M')
-        return None
+        return None, None
+
+    def get_soonest_session(self):
+        """Возвращение ближайший сеанс"""
+        film_time = dict()
+        for film in self.films:
+            name, times = self.get_film_nearest_session(film)
+            if time is not None:
+                film_time[times] = (film, name)
+        film_time = sorted(film_time.items(), key=lambda key: key[0])
+        if not film_time:
+            return(None, None, None)
+        return film_time[0][1][1], film_time[0][1][0], film_time[0][0]
