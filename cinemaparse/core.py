@@ -18,16 +18,20 @@ class CinemaParser:
 
     def print_raw_content(self):
         """Возвращение содержимого страницы"""
+        self.extract_raw_content()
         print(self.content)
 
     def get_films_list(self):
         """Возвращение списка фильмов"""
+        self.extract_raw_content()
         soup = BeautifulSoup(self.content, 'html.parser')
         arr = soup.find_all(class_="movie-plate")
         self.films = [elem.get("attr-title") for elem in arr]
 
     def get_film_nearest_session(self, film):
         """Возвращение кинотеатра и ближайшего сеанса фильма"""
+        self.extract_raw_content()
+        self.get_films_list()
         page = requests.get('https://{}.subscity.ru/'.format(self.town))
         soup = BeautifulSoup(page.text, 'html.parser')
         names = soup.find_all(class_="movie-plate")
@@ -55,6 +59,7 @@ class CinemaParser:
 
     def get_soonest_session(self):
         """Возвращение ближайшего сеанса, кинотеатра и названия фильма"""
+        self.extract_raw_content()
         self.get_films_list()
         film_time = dict()
         for film in self.films:
