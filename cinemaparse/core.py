@@ -25,7 +25,6 @@ class CinemaParser:
         soup = BeautifulSoup(self.content, 'html.parser')
         arr = soup.find_all(class_="movie-plate")
         self.films = [elem.get("attr-title") for elem in arr]
-        print(self.films)
 
     def get_film_nearest_session(self, film):
         """Возвращение кинотеатра и ближайшего сеанса фильма"""
@@ -56,12 +55,13 @@ class CinemaParser:
 
     def get_soonest_session(self):
         """Возвращение ближайшего сеанса, кинотеатра и названия фильма"""
+        self.get_films_list()
         film_time = dict()
         for film in self.films:
             name, times = self.get_film_nearest_session(film)
             if times is not None:
                 film_time[times] = (film, name)
         film_time = sorted(film_time.items(), key=lambda key: key[0])
-        if not film_time:
+        if len(film_time) is False:
             return(None, None, None)
         return film_time[0][1][1], film_time[0][1][0], film_time[0][0]
