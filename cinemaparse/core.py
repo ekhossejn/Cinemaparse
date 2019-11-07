@@ -70,3 +70,15 @@ class CinemaParser:
         if len(film_time) is False:
             return(None, None, None)
         return film_time[0][1][1], film_time[0][1][0], film_time[0][0]
+
+    def get_nearest_subway_station(self, the_name):
+        """Возвращение ближайшего метро к кинотеатру"""
+        page = requests.get('https://{}.subscity.ru/cinemas'.format(self.town))
+        soup = BeautifulSoup(page.text, 'html.parser')
+        cinemas = soup.find_all(class_="name col-sm-4 col-xs-12")
+        for cinema in cinemas:
+            name = cinema.find(class_="underdashed").text
+            if name == the_name:
+                metro = cinema.find(class_="medium-font location").text.split()[1:]
+                return metro
+        return []
