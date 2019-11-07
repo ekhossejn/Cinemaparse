@@ -76,9 +76,10 @@ class CinemaParser:
         page = requests.get('https://{}.subscity.ru/cinemas'.format(self.town))
         soup = BeautifulSoup(page.text, 'html.parser')
         cinemas = soup.find_all(class_="name col-sm-4 col-xs-12")
+        the_name = the_name.lower()
         for cinema in cinemas:
-            name = cinema.find(class_="underdashed").text
-            if name == the_name:
+            name = cinema.find(class_="underdashed").text.lower()
+            if name.find(the_name) != -1:
                 metro = cinema.find(class_="medium-font location").text.split()[1:]
                 return metro
-        return []
+        return Exception('There is no theatre with this name')
