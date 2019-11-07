@@ -78,11 +78,15 @@ class CinemaParser:
         cinemas = soup.find_all(class_="name col-sm-4 col-xs-12")
         the_name = the_name.lower()
         ans = []
+        cinema_is_found = False
         for cinema in cinemas:
             name = cinema.find(class_="underdashed").text.lower()
-            if name.find(the_name) != -1:
+            if name.find(the_name) != -1 and not cinema_is_found:
+                cinema_is_found = True
                 metro = [elem.replace('м. ', '') for elem in cinema.find(class_="medium-font location").text.split(',')]
                 ans += metro
+            elif name.find(the_name) != -1 and cinema_is_found:
+                return Exception('More than 1 cinema has got this name')
         if ans:
             return ans
-        return Exception('There is no theatre with this name')
+        return Exception('There is no cinema with this name')
