@@ -83,7 +83,7 @@ class CinemaParser:
             name = cinema.find(class_="underdashed").text.lower()
             if name.find(the_name) != -1 and not cinema_is_found:
                 cinema_is_found = True
-                metros = cinema.find(class_="medium-font location").text.split(',')
+                metros = cinema.find(class_="medium-font location").text.split(', ')
                 metro = [elem.replace('м. ', '') for elem in metros]
                 ans += metro
             elif name.find(the_name) != -1 and cinema_is_found:
@@ -99,7 +99,7 @@ class CinemaParser:
         page = requests.get('https://{}.subscity.ru/'.format(self.town))
         page = BeautifulSoup(page.text, 'html.parser')
         for name in page.find_all(class_="movie-plate"):
-            if name.get('attr-title') == film:
+            if name.get('attr-title').lower() == film:
                 url = 'https://{}.subscity.ru/'.format(self.town)\
                                                                   + name.find('a').get('href')
                 page = requests.get(url)
